@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адаптивный дашборд</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components/dashboard.css">
+    <link rel="stylesheet" href="css/components/widgets.css">
+    <link rel="stylesheet" href="css/components/buttons.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Мой дашборд</h1>
+            <button id="reset-dashboard" class="btn btn-secondary">Сбросить дашборд</button>
+        </header>
+
+        <main>
+            <div class="dashboard" id="dashboard">
+                <!-- Виджеты будут добавляться сюда динамически -->
+            </div>
+
+            <div class="widgets-panel">
+                <h2>Добавить виджеты</h2>
+                <div class="available-widgets" id="available-widgets">
+                    <!-- Кнопки для добавления виджетов -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Подключаем все JS модули -->
+    <script src="js/modules/Widget.js"></script>
+    <script src="js/modules/WeatherWidget.js"></script>
+    <script src="js/modules/CurrencyWidget.js"></script>
+    <script src="js/modules/QuoteWidget.js"></script>
+    <script src="js/modules/TimerWidget.js"></script>
+    <script src="js/modules/DashboardManager.js"></script>
+    <script src="js/main.js"></script>
+
+    <section style="max-width: 500px; margin: 60px auto; padding: 25px; 
+background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+    <h2 style="margin-bottom: 20px; font-size: 24px; text-align:center;">
+        Как вам наш сайт?
+    </h2>
+
+    <form id="feedbackForm">
+        <label>Имя</label>
+        <input type="text" id="name" required
+               style="width:100%; padding:10px; margin:8px 0 16px; border-radius:8px; border:1px solid #ccc;">
+
+        <label>Email</label>
+        <input type="email" id="email" required
+               style="width:100%; padding:10px; margin:8px 0 16px; border-radius:8px; border:1px solid #ccc;">
+
+        <label>Отзыв</label>
+        <textarea id="message" rows="4" required
+                  style="width:100%; padding:10px; margin:8px 0 16px; border-radius:8px; border:1px solid #ccc;"></textarea>
+
+        <button type="submit"
+                style="width:100%; padding:12px; background:#4a7dff; border:none;
+                       color:white; border-radius:8px; cursor:pointer; font-size:16px;">
+            Отправить
+        </button>
+    </form>
+
+    <p id="status" style="text-align:center; margin-top:15px;"></p>
+</section>
+
+<script>
+document.getElementById("feedbackForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    // Вставьте сюда ваш токен и ID чата
+    const BOT_TOKEN = "YOUR_BOT_TOKEN";
+    const CHAT_ID = "YOUR_CHAT_ID";
+
+    const text =
+        "📝 Новый отзыв с сайта:\n\n" +
+        "👤 Имя: " + name + "\n" +
+        "📧 Email: " + email + "\n" +
+        "💬 Отзыв:\n" + message;
+
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${B8515128955:AAGssGmCid8jblIPxRsY1Vrp3bzFLB2C030}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: -5048091501,
+                text: text,
+                parse_mode: "HTML"
+            })
+        });
+
+        if (response.ok) {
+            document.getElementById("status").innerText = "Спасибо! Ваш отзыв отправлен.";
+            document.getElementById("feedbackForm").reset();
+        } else {
+            document.getElementById("status").innerText = "Ошибка отправки.";
+        }
+    } catch (err) {
+        document.getElementById("status").innerText = "Сеть недоступна.";
+    }
+});
+</script>
+
+</body>
+</html>
